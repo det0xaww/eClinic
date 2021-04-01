@@ -1,0 +1,57 @@
+﻿@model Clinic.ViewModels.PatientReceptionViewModel
+@inject Clinic.Helpers.SelectListHelper.ISelectListHelper SelectListHelper
+@{
+    ViewData["Title"] = "Add";
+}
+
+<div class="container">
+    <h3>Edit reception</h3>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger text-center" })
+    <form method="post" asp-action="Edit" asp-controller="PatientReceptions">
+        <div class="row shadow">
+            <input hidden asp-for="Id" />
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Patient</label>
+                <select asp-for="@Model.PatientId" asp-items="SelectListHelper.PatientsSelectList()" class=" shadow-sm form-control"></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Last name</label>
+                <select asp-for="@Model.DoctorId" asp-items="SelectListHelper.DoctorsSelectList()" class=" shadow-sm form-control"></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Date and time</label>
+                <input name="datepicker" value="@(Model.DateOfReception.HasValue?Model.DateOfReception:DateTime.Now)" class="form-control shadow-sm " />
+                <input asp-for="DateOfReception" value="@(Model.DateOfReception.HasValue?Model.DateOfReception:DateTime.Now)" id="datee" hidden />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <p>Emergency case</p>
+                <input type="radio" value="true" asp-for="EmergencyCase" />
+                <span class="mr-5">Yes</span>
+                <input type="radio" value="false" asp-for="EmergencyCase" />
+                <span>No</span>
+            </div>
+            <div class="col form-group">
+                <input class="btn btn-success float-right ml-1 shadow-sm " type="submit" value="Save" />
+                <a class="btn btn-primary float-right mr-1 shadow-sm " href="@Url.Action("Index","PatientReceptions")">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('input[name="datepicker"]').daterangepicker({
+                timePicker: true,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1901,
+                maxYear: parseInt(moment().format('YYYY'), 10),
+                autoUpdateInput: true
+            }, function (start, end, label) {
+                $("#datee").val(end.format('YYYY-MM-DD h:mm a'));
+                $("#datee").trigger("change");
+            });
+        });
+    })
+</script>
+

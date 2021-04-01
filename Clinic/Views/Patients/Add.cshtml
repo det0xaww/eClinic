@@ -1,0 +1,60 @@
+﻿@model  Clinic.ViewModels.PatientViewModel
+@{
+    ViewData["Title"] = "Add";
+}
+
+<div class="container">
+    <h3>Add patient</h3>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger text-center" })
+    <form method="post" asp-action="Add" asp-controller="Patients">
+        <div class="row shadow">
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>First name</label>
+                <input asp-for="@Model.FirstName" class="form-control shadow-sm" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Last name</label>
+                <input asp-for="@Model.LastName" class="form-control shadow-sm" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Date of birth</label>
+                <input name="datepicker" class="form-control shadow-sm" />
+                <input asp-for="DateOfBirth" id="datee" hidden />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Gender</label>
+                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Clinic.Constants.Enumerations.Gender>()" class="form-control shadow-sm"></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Address</label>
+                <input asp-for="@Model.Address" class="form-control shadow-sm" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Phone number</label>
+                <input asp-for="@Model.PhoneNumber" class="form-control shadow-sm" />
+            </div>
+            <div class="col form-group">
+                <input class="btn btn-success float-right ml-1 shadow-sm" type="submit" value="Save" />
+                <a class="btn btn-primary float-right mr-1 shadow-sm" href="@Url.Action("Index","Patients")">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('input[name="datepicker"]').daterangepicker({
+                timePicker: true,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1901,
+                maxYear: parseInt(moment().format('YYYY'), 10),
+                autoUpdateInput: true
+            }, function (start, end, label) {
+                $("#datee").val(end.format('YYYY-MM-DD h:mm a'));
+                $("#datee").trigger("change");
+            });
+        });
+    })
+</script>
+

@@ -1,0 +1,128 @@
+﻿@model Clinic.ViewModels.IndexPatientReceptionViewModel
+
+<div class="container">
+
+    <h3 style="display:inline-block !important">Receptions</h3>
+    <a href="@Url.Action("Add","PatientReceptions")" class="btn btn-success btn-sm float-right mb-2 mt-1">Add reception</a>
+    <input id="download-btn" class="btn btn-sm btn-outline-success float-right mr-2 mb-2 mt-1" value="Download" />
+    <form id="form-to-submit" method="post">
+        <div class="row mt-5">
+            <div class="col-lg-9">
+                <input id="date-time" class="form-control text-center shadow-sm" value="@(Model.StartDateTime.HasValue && Model.EndDateTime.HasValue ? $" {Model.StartDateTime.Value.ToString("YYYY-MM-DD")} - {Model.EndDateTime.Value.ToString("YYYY-MM-DD")}" : "" )" name="datetimes" />
+                <input hidden id="start-date-time" asp-for="StartDateTime" />
+                <input hidden id="end-date-time" asp-for="EndDateTime" />
+            </div>
+            <div class="col-lg-3">
+                <input id="submit-btn" class="btn btn-sm btn-success form-control float-right shadow-sm" value="Search" />
+            </div>
+        </div>
+        @if (Model.PatientReceptionList.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered mt-4 shadow">
+                    <thead>
+                        <tr class="text-center">
+                            <th>
+                                Patient fullname
+                            </th>
+                            <th>
+                                Date of reception
+                            </th>
+                            <th>
+                                Doctor full name and license number
+                            </th>
+                            <th>
+                                Emergency case
+                            </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.PatientReceptionList.OrderByDescending(x => x.DateOfReception))
+                        {
+                            <tr class="text-center">
+                                <td>
+                                    @item.PatientFullName
+                                </td>
+                                <td>
+                                    @item.DateOfReception
+                                </td>
+                                <td>
+                                    @item.DoctorFullNameAndLicenseNumber
+                                </td>
+                                <td>
+                                    @if (item.EmergencyCase)
+                                    {
+                                        <span class="text-danger">YES!</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!item.IsThereMedicalReport)
+                                    {
+                                        <a href="@Url.Action("Edit", "PatientReceptions", new { id = item.PatientReceptionId })" class="btn btn-sm btn-primary mr-1">Edit</a>
+                                        <a href="@Url.Action("Delete", "PatientReceptions", new { id = item.PatientReceptionId })" class="btn btn-sm btn-danger ml-1">Delete</a>
+                                        <a href="@Url.Action("Add", "PatientMedicalReports", new { id = item.PatientReceptionId })" class="btn btn-sm btn-success ml-1">Add medical report</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Index","PatientMedicalReports",new { id = item.PatientReceptionId})" class="btn btn-success">See medical report</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <h3 class="text-center">No records found</h3>
+        }
+    </form>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('input[name="datetimes"]').daterangepicker({
+                opens: 'center',
+                startDate:
+                    "@(Model.StartDateTime.HasValue ? Model.StartDateTime.Value.ToString("YYYY-MM-DD") : DateTime.Now.AddMonths(-1).ToString("YYYY-MM-DD"))",
+                endDate:
+                    "@(Model.EndDateTime.HasValue ? Model.EndDateTime.Value.ToString("YYYY-MM-DD") : DateTime.Now.ToString("YYYY-MM-DD"))",
+            }, function (start, end, label) {
+                    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                    var displayDateRange = `${start.format('YYYY-MM-DD')} - ${end.format('YYY-MM-dd')}`;
+                    $("#date-time").val(displayDateRange);
+                    $("#start-date-time").val(start.format('YYYY-MM-DD'));
+                    $("#end-date-time").val(end.format('YYYY-MM-DD'));
+                    $("#start-date-time").trigger("change");
+                    $("#end-date-time").trigger("change");
+            });
+        });
+
+        $("#download-btn").on("click", function () {
+            $("#form-to-submit").removeAttr("action");
+            $("#form-to-submit").removeAttr("target");
+
+            $("#form-to-submit").attr("action", "@(Url.Action("Index","Reports"))");
+            $("#form-to-submit").attr("target", "_blank");
+            $("#form-to-submit").submit();
+        })
+
+        $("#submit-btn").on("click", function () {
+            $("#form-to-submit").removeAttr("action");
+            $("#form-to-submit").removeAttr("target");
+
+            $("#form-to-submit").attr("action", "@Url.Action("Index","PatientReceptions")");
+            $("#form-to-submit").submit();
+        })
+    });
+</script>
+

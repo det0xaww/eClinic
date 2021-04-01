@@ -1,0 +1,11 @@
+﻿@model Clinic.ViewModels.PatientMedicalReportViewModel
+
+<div class="row shadow">
+    <div class="col-lg-12">
+        <h3 style="display:inline-block !important">Medical report</h3>
+        <p class="float-right mb-2 mt-1">@Model.DateTimeCreated</p>
+        <p>@Model.Description</p>
+        <a class="btn btn-sm btn-success float-right mb-3 ml-2 shadow-sm" href="@Url.Action("Edit", "PatientMedicalReports",new { id=Model.PatientReceptionsId})">Edit</a>
+        <a class="btn btn-sm btn-primary float-right mb-3 shadow-sm" href="@Url.Action("Index", "PatientReceptions")">Back</a>
+    </div>
+</div>

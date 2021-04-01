@@ -1,0 +1,22 @@
+﻿@model Clinic.ViewModels.PatientMedicalReportViewModel
+
+<div class="container">
+    <input hidden asp-for="PatientReceptionsId" />
+    <div id="partial-div"></div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        var patientReceptionId = $("#PatientReceptionsId").val();
+        $.ajax({
+            url: "@(Url.Action("IndexPartial","PatientMedicalReports"))",
+            type: "GET",
+            dataType: "html",
+            data: { id: patientReceptionId },
+            success: function (data) {
+                $("#partial-div").append(data);
+            }
+        })
+    })
+</script>
+

@@ -1,0 +1,34 @@
+﻿@model Clinic.ViewModels.DoctorViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container">
+    <h3>Edit doctor</h3>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger text-center" })
+    <form method="post" asp-action="Edit" asp-controller="Doctors">
+        <div class="row shadow">
+            <input hidden asp-for="Id" />
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>First name</label>
+                <input asp-for="@Model.FirstName" class="form-control shadow-sm" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Last name</label>
+                <input asp-for="@Model.LastName" class="form-control shadow-sm" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Title</label>
+                <select asp-for="Title" asp-items="Html.GetEnumSelectList<Clinic.Constants.Enumerations.Title>()" class="form-control shadow-sm"></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>License number</label>
+                <input asp-for="@Model.LicenseNumber" class="form-control shadow-sm" />
+            </div>
+            <div class="col form-group">
+                <input class="btn btn-success float-right ml-1 shadow-sm" type="submit" value="Save" />
+                <a class="btn btn-primary float-right mr-1 shadow-sm" href="@Url.Action("Index","Doctors")">Back</a>
+            </div>
+        </div>
+    </form>
+</div>

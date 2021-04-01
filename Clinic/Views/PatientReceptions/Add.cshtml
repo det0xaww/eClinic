@@ -1,0 +1,79 @@
+﻿@model  Clinic.ViewModels.PatientReceptionViewModel
+@inject Clinic.Helpers.SelectListHelper.ISelectListHelper SelectListHelper
+@{
+    ViewData["Title"] = "Add";
+}
+
+<div class="container">
+    <h3>Add reception</h3>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger text-center" })
+    <form method="post" asp-action="Add" asp-controller="PatientReceptions">
+        <div class="row shadow">
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Patient</label>
+                <select asp-for="@Model.PatientId" asp-items="SelectListHelper.PatientsSelectList()" class="form-control shadow-sm"></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Doctor</label>
+                <select asp-for="@Model.DoctorId" asp-items="SelectListHelper.DoctorsSelectList()" class=" shadow-sm form-control"></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <label>Date and time</label>
+                <input name="datepicker" value="@(Model.DateOfReception.HasValue?Model.DateOfReception:DateTime.Now)" class="form-control shadow-sm" />
+                <input asp-for="DateOfReception" value="@(Model.DateOfReception.HasValue?Model.DateOfReception:DateTime.Now)" id="datee" hidden />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                <p>Emergency case</p>
+                <input type="radio" value="true" asp-for="EmergencyCase" />
+                <span class="mr-5">Yes</span>
+                <input type="radio" value="false" asp-for="EmergencyCase" />
+                <span>No</span>
+
+            </div>
+            <div class="col form-group">
+                <input class="btn btn-success float-right ml-1 shadow-sm" type="submit" value="Save" />
+                <a class="btn btn-primary float-right mr-1 shadow-sm" href="@Url.Action("Index","PatientReceptions")">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('input[name="datepicker"]').daterangepicker({
+                timePicker: true,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1901,
+                maxYear: parseInt(moment().format('YYYY'), 10),
+                autoUpdateInput:true
+            }, function (start, end, label) {
+                    $("#datee").val(end.format('YYYY-MM-DD h:mm a'));
+                    $("#datee").trigger("change");
+            });
+        });
+
+        $(".emergency-case").on("click", function () {
+            console.log($(this).val())
+            $("#EmergencyCase").val($(this).val()).trigger("change");
+            console.log($("#EmergencyCase").val())
+
+            $(".emergency-case").removeClass("btn-success").addClass("btn-outline-success");
+            $(this).removeClass("btn-outline-success").addClass("btn-success");
+        })
+
+        /*$("#emergency-case-yes").on("click", function () {
+            $("#emergency-case").val("");
+
+            $("#emergency-case").val("true");
+            $("#emergency-case").trigger("change");
+        })
+
+        $("#emergency-case-no").on("click", function () {
+            $("#emergency-case").val("");
+
+            $("#emergency-case").val("false");
+            $("#emergency-case").trigger("change");
+        })*/
+    })
+</script>
