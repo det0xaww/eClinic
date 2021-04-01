@@ -76,8 +76,8 @@ namespace Clinic.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(PatientViewModel model)
         {
-            if (_patientRepository.GetAll().ToList().Any(x => x.FirstName.Equals(model.FirstName) && x.LastName.Equals(model.LastName)))
-                ModelState.AddModelError("", "Patient with same first name and last name already exist");
+            /*if (_patientRepository.GetAll().ToList().Any(x => x.FirstName.Equals(model.FirstName) && x.LastName.Equals(model.LastName)))
+                ModelState.AddModelError("", "Patient with same first name and last name already exist");*/
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -92,7 +92,7 @@ namespace Clinic.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest();
             }
